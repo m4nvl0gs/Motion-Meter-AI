@@ -3,9 +3,10 @@ import cv2, pyttsx3, pyaudio, smtplib, ssl
 import pyfiglet as pyg
 import speech_recognition as sr
 from tracker import *
+from moviepy.editor import VideoFileClip
 
 #Welcome Display
-res= pyg.figlet_format("Motion Meter AI", font = "slant")   
+res = pyg.figlet_format("Motion Meter AI", font = "slant")   
 print(res)
 
 #Constants
@@ -15,6 +16,8 @@ context = ssl.create_default_context()
 name_video = str(input("Enter the filename of the video you would like to analyse: "))
 cap = cv2.VideoCapture(name_video+".mp4") # filepath for the video clip to analyse
 
+# Calculate duration of video to be analysed
+clip = VideoFileClip(name_video+".mp4")
 # Main Vehicle Detection 
 object_detector = cv2.createBackgroundSubtractorMOG2(history=100, varThreshold=40)
 try:
@@ -67,8 +70,9 @@ with sr.Microphone() as source:
         email_id = input("Enter your email address: ")
         with smtplib.SMTP_SSL("smtp.gmail.com",port, context=context) as server:
             string = "The object tracking detection program successfully detected",num,"vehicles from the video clip",name_video
-            pass
+            duration_clip = clip.duration
             #server.login(email,password)
             #server.sendmail(from,to,string)
+        print(f"The email has been sent to the email address {email_id}")
 cap.release()
 cv2.destroyAllWindows() # Close all windows
