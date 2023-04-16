@@ -1,5 +1,5 @@
 # Required Modules
-import cv2, pyttsx3, pyaudio, smtplib, ssl
+import cv2, pyttsx3, pyaudio, smtplib, ssl, pyfiglet
 import speech_recognition as sr
 from tracker import *
 
