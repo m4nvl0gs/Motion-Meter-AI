@@ -18,6 +18,11 @@ cap = cv2.VideoCapture(name_video+".mp4") # filepath for the video clip to analy
 
 # Calculate duration of video to be analysed
 clip = VideoFileClip(name_video+".mp4")
+
+# Frame Count
+fps = clip.fps
+print(f"The frame rate of the clip is {fps}")
+
 # Main Vehicle Detection 
 object_detector = cv2.createBackgroundSubtractorMOG2(history=100, varThreshold=40)
 try:
