@@ -1,14 +1,19 @@
 # Required Modules
-import cv2, pyttsx3, pyaudio, smtplib, ssl, pyfiglet
+import cv2, pyttsx3, pyaudio, smtplib, ssl
+import pyfiglet as pyg
 import speech_recognition as sr
 from tracker import *
+
+#Welcome Display
+res= pyg.figlet_format("Motion Meter AI", font = "slant")   
+print(res)
 
 #Constants
 tracker = EuclideanDistTracker() # Used to differentiate between moving and static objects
 port = 465 # Standard GMAIL Port
 context = ssl.create_default_context()
-name_video = "los_angeles.mp4"
-cap = cv2.VideoCapture(name_video) # filepath for the video clip to analyse
+name_video = str(input("Enter the filename of the video you would like to analyse: "))
+cap = cv2.VideoCapture(name_video+".mp4") # filepath for the video clip to analyse
 
 # Main Vehicle Detection 
 object_detector = cv2.createBackgroundSubtractorMOG2(history=100, varThreshold=40)
