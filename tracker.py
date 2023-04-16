@@ -18,30 +18,27 @@ class EuclideanDistTracker:
             cy = (y + y + h) // 2
 
             # Find out if that object was detected already
-            same_object_detected = False
+            object_id = None
             for id, pt in self.center_points.items():
                 dist = math.hypot(cx - pt[0], cy - pt[1])
 
                 if dist < 25:
-                    self.center_points[id] = (cx, cy)
-                    print(self.center_points)
-                    objects_bbs_ids.append([x, y, w, h, id])
-                    same_object_detected = True
+                    object_id = id
                     break
 
             # New object is detected we assign the ID to that object
-            if same_object_detected is False:
-                self.center_points[self.id_count] = (cx, cy)
-                objects_bbs_ids.append([x, y, w, h, self.id_count])
+            if object_id is None:
+                object_id = self.id_count
                 self.id_count += 1
 
-        # Clean the dictionary by center points to remove IDS not used anymore
-        new_center_points = {}
-        for obj_bb_id in objects_bbs_ids:
-            _, _, _, _, object_id = obj_bb_id
-            center = self.center_points[object_id]
-            new_center_points[object_id] = center
+            # Update dictionary with new object center
+            self.center_points[object_id] = (cx, cy)
+            objects_bbs_ids.append([x, y, w, h, object_id])
 
-        # Update dictionary with IDs not used removed
-        self.center_points = new_center_points.copy()
+        # Clean the dictionary by center points to remove IDS not used anymore
+        active_object_ids = list(self.center_points.keys())
+        for object_id in active_object_ids:
+            if object_id not in [obj_bb_id[4] for obj_bb_id in objects_bbs_ids]:
+                del self.center_points[object_id]
+
         return objects_bbs_ids
